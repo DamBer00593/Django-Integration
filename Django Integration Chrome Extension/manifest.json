@@ -1,0 +1,21 @@
+{	
+	"name": "Django charger integration",
+	"description": "OCPP stuffs",
+	"version": "0.0.1.1",
+	"manifest_version": 3,
+    "action": {
+	"default_popup": "popup/hello.html",
+	"default_icon": "popup/hello_extensions.png"
+	},
+  "permissions": [
+    "storage"
+  ],
+	"content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": [
+        "https://charger.lightgaming.ca/admin/ocpp/transaction/"
+      ]
+    }
+  ]
+}
