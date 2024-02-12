@@ -1,14 +1,33 @@
+let cost = 0;
+let position = "bottom";
 window.onload = function() {
     console.log('This is a popup!');
-    document.querySelector("#costBtn").addEventListener("click", clickeded)
+    chrome.storage.local.get(["key"]).then((result) => {
+		if(result.key){
+			cost = result.key;
+			change()
+		}
+	});
+	chrome.storage.local.get(["pos"]).then((result) => {
+		if(result.pos){
+			position = result.pos;
+			change()
+		}
+	});
+    
+    document.querySelector("#posBtn").addEventListener("click",processButton);
 }
-function clickeded(){
-    sendCost(parseFloat(document.querySelector("#cost").value))
-    console.log(document.querySelector("#cost").value)
+
+function change(){
+    document.querySelector("#cost").value = cost;
+    document.querySelector("#posDropdown").value = position;
 }
-async function sendCost(cost){
-        const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-        const response = await chrome.tabs.sendMessage(tab.id, {cost: cost});
-        // do something with response here, not outside the function
-        console.log(response);
+function processButton(){
+    console.log(document.querySelector("#posDropdown").value)
+    sendInfo(parseFloat(document.querySelector("#cost").value), document.querySelector("#posDropdown").value);
 }
+async function sendInfo(tempCost, tempPosition){
+    const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+    const response = await chrome.tabs.sendMessage(tab.id, {cost: [tempCost, tempPosition]});
+}
+
